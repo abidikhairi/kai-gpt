@@ -30,6 +30,17 @@ class FeedForward(nn.Module):
         
         return self.linear2(hidden_states)
 
+class LMHead(nn.Module):
+    def __init__(self, hidden_size: int, vocab_size: int) -> None:
+        super().__init__()
+        
+        self.linear = nn.Linear(hidden_size, vocab_size, False)
+          
+    def forward(
+        self,
+        hidden_states: torch.Tensor
+    ) -> torch.Tensor:
+        return self.linear(hidden_states)
 
 class TransformerLayer(nn.Module):
     def __init__(
