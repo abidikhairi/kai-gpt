@@ -17,6 +17,9 @@ jobs:
                 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         - name: Install
           run: pip install -e .
+        - name: Prepare for tests
+          run: |
+                mkdir -p data/temp/toys
         - name: Test
           run: |
                 make test
