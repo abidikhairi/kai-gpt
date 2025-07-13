@@ -1,0 +1,1 @@
+from kai_gpt.trainers.causal_lm_trainer import CausalLmModel

@@ -2,6 +2,7 @@
 
 *.ipynb
 data/temp
+test_*.py
 
 # Temporary and binary files
 *~
