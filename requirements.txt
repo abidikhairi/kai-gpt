@@ -2,3 +2,5 @@ flake8
 pytest
 pydantic
 pytest-cov
+lightning-utilities==0.14.3
+pytorch-lightning==2.5.2

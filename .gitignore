@@ -1,6 +1,7 @@
 # Playbook files:
 
 *.ipynb
+data/temp
 
 # Temporary and binary files
 *~
