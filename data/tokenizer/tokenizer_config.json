@@ -1,6 +1,6 @@
 {
   "add_bos_token": true,
-  "add_eos_token": false,
+  "add_eos_token": true,
   "add_prefix_space": null,
   "added_tokens_decoder": {
     "0": {
@@ -26,6 +26,14 @@
       "rstrip": false,
       "single_word": false,
       "special": true
+    },
+    "32000": {
+      "content": "<pad>",
+      "lstrip": false,
+      "normalized": false,
+      "rstrip": false,
+      "single_word": false,
+      "special": true
     }
   },
   "bos_token": "<s>",
@@ -34,10 +42,10 @@
   "extra_special_tokens": {},
   "legacy": false,
   "model_max_length": 1000000000000000019884624838656,
-  "pad_token": null,
+  "pad_token": "<pad>",
   "padding_side": "right",
   "sp_model_kwargs": {},
-  "tokenizer_class": "LlamaTokenizer",
+  "tokenizer_class": "GptTokenizer",
   "unk_token": "<unk>",
   "use_default_system_prompt": false
 }

@@ -1,0 +1,1 @@
+from kai_gpt.tokenization.tokenization_fast import GptTokenizerFast
