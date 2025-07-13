@@ -33,7 +33,7 @@ class TransformerLayerTest(unittest.TestCase):
         )
         
         hidden_states = torch.randn((3, 5, 16))
-        attention_mask = torch.randn((3, 5, 5))
+        attention_mask = torch.randn((3, 4, 5, 5))
         
         output = layer(hidden_states=hidden_states, attention_mask=attention_mask, return_attentions=True)
         

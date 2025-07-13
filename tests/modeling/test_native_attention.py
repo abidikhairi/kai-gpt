@@ -27,7 +27,7 @@ class NativeAttentionImplTest(unittest.TestCase):
         attention = NativeAttention(hidden_size=16, num_attention_heads=num_heads, attn_dropout_probs=0.1)
         
         hidden_states = torch.randn((bs, seq_len, 16))
-        attention_mask = torch.randn((bs, seq_len, seq_len))
+        attention_mask = torch.randn((bs, num_heads, seq_len, seq_len))
         
         output = attention(hidden_states, attention_mask, return_attentions=True)
         

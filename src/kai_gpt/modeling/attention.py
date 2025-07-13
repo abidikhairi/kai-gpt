@@ -86,7 +86,7 @@ class NativeAttention(nn.Module):
         
         if attention_mask is not None:
             # Apply the attention mask is (precomputed for all layers in Model forward() function)
-            scores = scores + attention_mask.unsqueeze(1)
+            scores = scores + attention_mask # NOTE: do not `.unsqueeze(1)` broadcast as it can break batching
         
         # Normalize and calculate context vectors
         scores = torch.softmax(scores, dim=-1)
