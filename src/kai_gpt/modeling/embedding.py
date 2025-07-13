@@ -1,3 +1,4 @@
+import math
 import torch
 from torch import nn
 
@@ -50,8 +51,51 @@ class Embedding(nn.Embedding):
     """
     def __init__(self, num_embeddings: int, embedding_dim: int, padding_idx: int | None = None, max_norm: float | None = None, norm_type: float = 2, scale_grad_by_freq: bool = False, sparse: bool = False, _weight: torch.Tensor | None = None, _freeze: bool = False, device=None, dtype=None) -> None:
         super().__init__(num_embeddings, embedding_dim, padding_idx, max_norm, norm_type, scale_grad_by_freq, sparse, _weight, _freeze, device, dtype)
+    
+    
+class PositionalEncoding(nn.Module):
+    def __init__(self, hidden_size, max_len=5000):
+        super().__init__()
+        
+        pe = torch.zeros(max_len, hidden_size)
+        position = torch.arange(0, max_len).unsqueeze(1).float()
+        div_term = torch.exp(torch.arange(0, hidden_size, 2).float() * (-math.log(10000.0) / hidden_size))
+        
+        pe[:, 0::2] = torch.sin(position * div_term)     # even
+        pe[:, 1::2] = torch.cos(position * div_term)     # odd
+        
+        self.register_buffer('pe', pe.unsqueeze(0))  # (1, max_len, hidden_size)
 
+    def forward(self, x):
+        # x: (batch_size, seq_len, hidden_size)
+        seq_len = x.size(1)
+        return x + self.pe[:, :seq_len] # type: ignore
+    
+class TokenEmbedding(nn.Module):
+    def __init__(
+        self,
+        vocab_size: int,
+        hidden_size: int,
+        pad_token_id: int,
+        max_seq_len: int,
+        token_dropout_probs: float = 0.0,
+    ) -> None:
+        super().__init__()
+        
+        self.embedding = Embedding(num_embeddings=vocab_size, embedding_dim=hidden_size, padding_idx=pad_token_id)
+        self.positional_encoding = PositionalEncoding(hidden_size=hidden_size, max_len=max_seq_len)
+        self.token_dropout_probs = token_dropout_probs
+    
+    def forward(self, input_ids: torch.Tensor) -> torch.Tensor:
+        hidden_states = torch.dropout(
+            self.embedding(input_ids),
+            p=self.token_dropout_probs,
+            train=self.training
+        )
+        
+        return self.positional_encoding(hidden_states)
 
+        
 def rotate_half(x):
     """Rotates half the hidden dims of the input tensor.
     
