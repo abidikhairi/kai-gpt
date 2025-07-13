@@ -100,7 +100,7 @@ class CsvTextDataset(LightningDataModule):
 
     
     def val_dataloader(self):
-        return self._get_dataloader(self.datasets['validation'], True) # type: ignore
+        return self._get_dataloader(self.datasets['validation'], False) # type: ignore
 
     
     def test_dataloader(self):
