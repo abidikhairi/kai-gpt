@@ -18,4 +18,6 @@ from kai_gpt.modeling.configuration import (
 from kai_gpt.modeling.modeling_outputs import (
     TransformerOutput
 )
-
+from kai_gpt.modeling.model import (
+    Transformer
+)
