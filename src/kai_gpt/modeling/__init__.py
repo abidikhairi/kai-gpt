@@ -4,5 +4,6 @@ from kai_gpt.modeling.attention import (
 )
 from kai_gpt.modeling.layers import (
     FeedForward,
-    GatedFeedForward
+    GatedFeedForward,
+    TransformerLayer
 )
