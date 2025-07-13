@@ -7,6 +7,34 @@ from kai_gpt.modeling.embedding import RotaryEmbedding
 
 
 class NativeAttention(nn.Module):
+    """Implements scaled dot-product attention with rotary position embeddings.
+    
+    This attention mechanism performs multi-head attention with rotary position embeddings
+    (RoPE) applied to queries and keys before computing attention scores. The implementation
+    includes optional attention masking and dropout.
+
+    Args:
+        hidden_size (int): The dimension of the input and output features.
+        num_attention_heads (int): Number of attention heads.
+        attn_dropout_probs (float, optional): Dropout probability for attention scores. Default: 0.1.
+
+    Raises:
+        AssertionError: If hidden_size is not divisible by num_attention_heads.
+
+    Attributes:
+        head_size (int): Dimension of each attention head.
+        w_q (nn.Linear): Linear projection for queries.
+        w_k (nn.Linear): Linear projection for keys.
+        w_v (nn.Linear): Linear projection for values.
+        output (nn.Linear): Final linear projection layer.
+        rotary_embedding (RotaryEmbedding): Rotary position embedding module.
+
+    Examples:
+        >>> attention = NativeAttention(hidden_size=512, num_attention_heads=8)
+        >>> hidden_states = torch.randn(2, 16, 512)  # (batch, seq_len, hidden_size)
+        >>> output = attention(hidden_states)
+        >>> output_with_attn = attention(hidden_states, return_attentions=True)
+    """
     def __init__(
         self,
         hidden_size: int,
