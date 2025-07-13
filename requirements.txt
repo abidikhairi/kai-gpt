@@ -3,6 +3,7 @@ pytest
 pydantic
 pytest-cov
 pandas
+transformers==4.52.4
 lightning-utilities==0.14.3
 pytorch-lightning==2.5.2
 datasets==3.6.0
