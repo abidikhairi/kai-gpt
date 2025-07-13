@@ -54,6 +54,25 @@ class Embedding(nn.Embedding):
     
     
 class PositionalEncoding(nn.Module):
+    """Implements the sinusoidal positional encoding for non-recurrent neural networks.
+    
+    This module adds positional information to input embeddings using sine and cosine functions
+    of different frequencies as described in "Attention Is All You Need" (Vaswani et al., 2017).
+    The positional encodings have the same dimension as the embeddings so that they can be summed.
+
+    Args:
+        hidden_size (int): The dimension of the input embeddings (must be even).
+        max_len (int, optional): Maximum sequence length that the model might encounter. Default: 5000.
+
+    Attributes:
+        pe (torch.Tensor): Buffer containing the pre-computed positional encodings
+            of shape (1, max_len, hidden_size).
+
+    Examples:
+        >>> pe = PositionalEncoding(hidden_size=512)
+        >>> x = torch.randn(32, 10, 512)  # (batch_size, seq_len, hidden_size)
+        >>> x_pe = pe(x)  # adds positional encoding
+    """
     def __init__(self, hidden_size, max_len=5000):
         super().__init__()
         
@@ -72,6 +91,36 @@ class PositionalEncoding(nn.Module):
         return x + self.pe[:, :seq_len] # type: ignore
     
 class TokenEmbedding(nn.Module):
+    """Combines token embeddings with positional encodings for transformer models.
+
+    This module handles:
+    1. Token embeddings (with padding support)
+    2. Optional token dropout
+    3. Positional encodings
+
+    Args:
+        vocab_size (int): Size of the vocabulary.
+        hidden_size (int): Dimension of the embedding vectors.
+        pad_token_id (int): ID used for padding tokens in the vocabulary.
+        max_seq_len (int): Maximum sequence length for positional encodings.
+        token_dropout_probs (float, optional): Probability of dropping out entire token embeddings.
+            Set to 0.0 to disable. Default: 0.0.
+
+    Attributes:
+        embedding (Embedding): Token embedding layer.
+        positional_encoding (PositionalEncoding): Positional encoding layer.
+        token_dropout_probs (float): Token dropout probability.
+
+    Example:
+        >>> embedding = TokenEmbedding(
+        ...     vocab_size=30000,
+        ...     hidden_size=768,
+        ...     pad_token_id=0,
+        ...     max_seq_len=512
+        ... )
+        >>> input_ids = torch.randint(0, 30000, (32, 128))  # (batch_size, seq_len)
+        >>> embeddings = embedding(input_ids)  # (32, 128, 768)
+    """
     def __init__(
         self,
         vocab_size: int,
