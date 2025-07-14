@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Literal, Optional
 import torch
 from torch import nn
 
@@ -139,3 +139,68 @@ class Transformer(nn.Module):
             last_hidden_states=hidden_states,
             logits=logits,
         )
+
+    @torch.no_grad()
+    def generate(
+        self,
+        max_new_tokens: int,
+        temperature: float = 1,
+        top_k: int = 250,
+        strategy: Literal['greedy', 'random'] = 'greedy'
+    ):
+        """Generates token sequences using the language model.
+
+        Args:
+            max_new_tokens (int): Maximum number of tokens to generate.
+            temperature (float, optional): Controls randomness of predictions by scaling logits.
+                Lower = more deterministic, higher = more random. Default: 1.0
+            top_k (int, optional): When strategy='random', restricts sampling to top-k most likely tokens. 
+                Default: 250
+            strategy (Literal['greedy', 'random'], optional): Generation strategy:
+                - 'greedy': Always selects the most likely next token
+                - 'random': Samples from the probability distribution
+                Default: 'greedy'
+
+        Returns:
+            torch.Tensor: Generated token sequence of shape (seq_len,)
+
+        Raises:
+            ValueError: If unknown generation strategy is provided.
+
+        Notes:
+            - Generation stops when EOS or PAD token is generated
+            - Uses teacher-forcing (autoregressive generation)
+            - Runs in inference mode (no gradients)
+
+        Example:
+            >>> model = Transformer(config)
+            >>> tokens = model.generate(max_new_tokens=50, temperature=0.7, strategy='random')
+            >>> print(tokenizer.decode(tokens))
+        """
+        generated_tokens = torch.tensor([self.config.bos_token_id]).long().unsqueeze(0)
+        attention_mask = torch.ones_like(generated_tokens).long()
+        
+        for _ in range(max_new_tokens):
+            output = self(input_ids=generated_tokens, attention_mask=attention_mask)
+            logits = output.logits[:, -1, :]  # (1, vocab_size)
+            logits = logits / temperature
+
+            if strategy == 'greedy':
+                next_token = torch.argmax(logits, dim=-1)
+            elif strategy == 'random':
+                logits = torch.topk(logits, k=top_k, dim=-1)
+                values, indices = logits.values, logits.indices
+                probs = torch.softmax(values, dim=-1)
+                next_token = indices.gather(-1, torch.multinomial(probs, num_samples=1))
+            else:
+                raise ValueError(f"Unknown strategy: {strategy}")
+
+            next_token = next_token
+            
+            generated_tokens = torch.cat([generated_tokens, next_token], dim=1)
+            attention_mask = torch.ones_like(generated_tokens)
+
+            if next_token.item() == self.config.eos_token_id or next_token.item() == self.config.pad_token_id:
+                break
+
+        return generated_tokens

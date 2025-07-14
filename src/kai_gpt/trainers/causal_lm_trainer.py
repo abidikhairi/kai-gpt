@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Literal, Optional, Tuple
 from torch import optim
 from pytorch_lightning import LightningModule
 import torch
@@ -115,3 +115,18 @@ class CausalLmModel(LightningModule):
         self.log('valid/perplexity', loss.exp())
         
         return loss
+
+    @torch.no_grad()
+    def generate(
+        self,
+        max_new_tokens: int = 20,
+        temperature: float = 1,
+        top_k: int = 250,
+        strategy: Literal['greedy', 'random'] = 'greedy'
+    ):
+        return self.model.generate(
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+            top_k=top_k,
+            strategy=strategy
+        )

@@ -32,3 +32,11 @@ class TransformerModelTest(unittest.TestCase):
         self.assertIsNotNone(output)
         self.assertIsNotNone(output.last_hidden_states)
         self.assertEqual((2, 5, 16), output.last_hidden_states.shape)
+
+    def test_generate_function(self):
+        config = TransformerConfiguration()
+        model = Transformer(config)
+        
+        generated_text = model.generate(max_new_tokens=20, temperature=1, top_k=250, strategy='random')
+        
+        self.assertEqual((1, 20 + 1), generated_text.shape) # +1 for bos_token
