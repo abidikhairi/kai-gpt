@@ -28,6 +28,7 @@ def main(args):
     
     config = TransformerConfiguration(
         vocab_size=len(tokenizer),
+        num_hidden_layers=args.num_hidden_layers,
         num_attention_heads=args.num_attention_heads,
         hidden_size=args.hidden_size,
         intermediate_size=args.intermediate_size,
@@ -83,6 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--csv-file-ext', type=str, default='csv')
     
     ## model hyperparameters
+    parser.add_argument('--num-hidden-layers', type=int, default=6)
     parser.add_argument('--num-attention-heads', type=int, default=4)
     parser.add_argument('--hidden-size', type=int, default=16)
     parser.add_argument('--intermediate-size', type=int, default=32)
