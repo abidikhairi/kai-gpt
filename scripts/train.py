@@ -1,17 +1,19 @@
 import argparse
+import torch
 from pytorch_lightning import (
     callbacks,
     loggers,
     Trainer
 )
 from kai_gpt.modeling import (
-    TransformerConfiguration,
-    Transformer
+    TransformerConfiguration
 )
 from kai_gpt.trainers import CausalLmModel
 from kai_gpt.loaders import CsvTextDataset
 from kai_gpt.tokenization import GptTokenizerFast
 
+
+torch.set_float32_matmul_precision('medium') # medium performance on floating operations
 
 def main(args):
     tokenizer = GptTokenizerFast.from_pretrained(args.tokenizer)
@@ -66,6 +68,7 @@ def main(args):
         max_steps=args.max_training_steps,
         accumulate_grad_batches=2,
         default_root_dir=output_dir,
+#        overfit_batches=1 # activate when testing the model
     )
     
     trainer.fit(model, dataset)
