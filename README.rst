@@ -1,9 +1,9 @@
 .. These are examples of badges you might want to add to your README:
    please update the URLs accordingly
 
-    .. image:: https://api.cirrus-ci.com/github/<USER>/kai_gpt.svg?branch=main
+    .. image:: https://api.cirrus-ci.com/github/abidikhairi/kai-gpt.svg?branch=main
         :alt: Built Status
-        :target: https://cirrus-ci.com/github/<USER>/kai_gpt
+        :target: https://cirrus-ci.com/github/abidikhairi/kai-gpt
     .. image:: https://readthedocs.org/projects/kai_gpt/badge/?version=latest
         :alt: ReadTheDocs
         :target: https://kai_gpt.readthedocs.io/en/stable/
@@ -30,15 +30,43 @@
 |
 
 =======
-kai_gpt
+Kai GPT: An educational library to build and train Generative Transformer Language Models from scratch
 =======
 
+Kai GPT is a comprehensive educational framework designed to help developers, researchers, and students understand and implement modern transformer architectures.
+With clear implementations and thorough documentation, you'll gain deep insights into how language models work under the hood.
 
-    Add a short description here!
+Features ✨
+============
+
+- 🧠 Implementations of core transformer components:
+  - Rotary Positional Embeddings
+  - Multi-head Attention
+  - Position-wise Feedforward Networks
+- 📚 Educational focus with detailed docstrings and type annotations
+- ⚡️ Lightning-fast training with PyTorch Lightning integration
+- 🧩 Modular design for easy experimentation
+- 🤖 Text generation with multiple decoding strategies
+- 📈 Built-in dataset handling for common text formats
 
 
-A longer description of your project goes here...
+Contributing 🤝
+============
 
+We welcome contributions! Please see our Contribution Guidelines for details.
+
+License 📄
+============
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Acknowledgments 🙏
+============
+
+Kai GPT is inspired by:
+- The annotated Transformers
+- Hugginfaces Blogs
+- NanoGPT
 
 .. _pyscaffold-notes:
 
